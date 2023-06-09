@@ -12,8 +12,11 @@ public class TenantContext {
   private TenantContext() {}
 
   public static void setCurrentTenantContext(String dataPartitionId) {
-    log.info("Setting tenant context with dataPartitionId: {}", dataPartitionId);
-    TenantInfo tenantInfo = new TenantInfo(dataPartitionId);
+    setCurrentTenantContext(new TenantInfo(dataPartitionId));
+  }
+
+  public static void setCurrentTenantContext(TenantInfo tenantInfo) {
+    log.info("Setting tenant context with dataPartitionId: {}", tenantInfo.getDataPartitionId());
     currentTenantContext.set(tenantInfo);
   }
 
