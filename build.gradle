@@ -1,0 +1,85 @@
+buildscript {
+    ext {
+        mapstructVersion = '1.5.3.Final'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.5'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'jacoco'
+    id "org.sonarqube" version "3.3"
+}
+
+group 'com.slb.iacta'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+def junitVersion = '5.9.2'
+def mockitoVersion = '5.2.0'
+def beanMatcherVersion = '0.14'
+def archunitVersion = '1.0.1'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    compileOnly 'org.projectlombok:lombok'
+    implementation 'org.mapstruct:mapstruct:${mapstructVersion}'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.mockito:mockito-inline:${mockitoVersion}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
+    testImplementation "org.junit.vintage:junit-vintage-engine:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testImplementation "com.tngtech.archunit:archunit-junit5:${archunitVersion}"
+    testImplementation "com.google.code.bean-matchers:bean-matchers:${beanMatcherVersion}"
+    implementation 'io.micrometer:context-propagation:1.0.2'
+    implementation 'org.springframework.graphql:spring-graphql:1.2.0'
+}
+
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+compileJava {
+    sourceCompatibility = 17
+    targetCompatibility = 17
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                minimum = 0.90
+            }
+            limit {
+                counter = 'BRANCH'
+                minimum = 0.70
+            }
+        }
+    }
+}
+
