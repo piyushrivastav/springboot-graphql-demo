@@ -1,5 +1,4 @@
 application.name: spring-graphql-demo
-server.port: 8080
 spring.graphql.graphiql.enabled: true
 spring.graphql.schema.fileExtensions: .graphql, .graphqls
 # the below property is for CORS
